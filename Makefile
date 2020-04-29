@@ -8,9 +8,15 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = meter_readings
-PYTHON_INTERPRETER = python3
+PYTHON_INTERPRETER = python
 
-ifeq (,$(shell which conda))
+ifeq ($(OS),Windows_NT)
+WINDOWS=True
+else
+WINDOWS=False
+endif
+
+ifeq (,$(shell conda info))
 HAS_CONDA=False
 else
 HAS_CONDA=True
@@ -21,9 +27,10 @@ endif
 #################################################################################
 
 ## Install Python Dependencies
-requirements: test_environment
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+requirements: activate_environment test_environment
+	conda env update --file environment.yml  --prune
+##	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
+##	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
 ## Make Dataset
 data: requirements
@@ -57,13 +64,9 @@ endif
 ## Set up python interpreter environment
 create_environment:
 ifeq (True,$(HAS_CONDA))
-		@echo ">>> Detected conda, creating conda environment."
-ifeq (3,$(findstring 3,$(PYTHON_INTERPRETER)))
-	conda create --name $(PROJECT_NAME) python=3
-else
-	conda create --name $(PROJECT_NAME) python=2.7
-endif
-		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
+	@echo ">>> Detected conda, creating conda environment."
+	conda env create -f environment.yml
+	@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
 else
 	$(PYTHON_INTERPRETER) -m pip install -q virtualenv virtualenvwrapper
 	@echo ">>> Installing virtualenvwrapper if not already installed.\nMake sure the following lines are in shell startup file\n\
@@ -72,8 +75,19 @@ else
 	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
 endif
 
+install_kernel: activate_environment
+	$(PYTHON_INTERPRETER) -m ipykernel install --user --name $(PROJECT_NAME)
+
+activate_environment:
+ifeq ($(PROJECT_NAME),$(CONDA_DEFAULT_ENV))
+		@echo ">>> Alrighty. Correct conda environment is activated."
+else
+		@echo ">>> Activate conda environment $(PROJECT_NAME)"
+		exit 1
+endif
+
 ## Test python environment is setup correctly
-test_environment:
+test_environment: activate_environment
 	$(PYTHON_INTERPRETER) test_environment.py
 
 #################################################################################

@@ -17,3 +17,7 @@ Sample Procedure:
 Additional Procedure Ideas:
 - When handling text, one would use a model for text extraction and a second model (sequence2sequence) to verify correct sentences
 - Possible safetynet would be a threshold that limits higher and prohibits lower numbers with a higher date (next day(s))
+
+Object Detection (for identifying the metering device or the metering field):
+- e.g. You Only Look Once: Unified, Real-Time Object Detection https://arxiv.org/abs/1506.02640
+- Tensorflow Object Detection API (https://www.analyticsvidhya.com/blog/2020/04/build-your-own-object-detection-model-using-tensorflow-api/)

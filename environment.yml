@@ -17,9 +17,11 @@ dependencies:
   - xlrd
   - keras-gpu
   - tensorflow-gpu
-  - pillow
   - exifread
   - pyzmq>=19
+  - pillow
+  - conda-forge::opencv
+  - conda-forge::imutils
   - pip:
     - '--editable=.'
     - click

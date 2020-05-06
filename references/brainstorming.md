@@ -21,3 +21,5 @@ Additional Procedure Ideas:
 Object Detection (for identifying the metering device or the metering field):
 - e.g. You Only Look Once: Unified, Real-Time Object Detection https://arxiv.org/abs/1506.02640
 - Tensorflow Object Detection API (https://www.analyticsvidhya.com/blog/2020/04/build-your-own-object-detection-model-using-tensorflow-api/)
+- YOLO OCR https://medium.com/saarthi-ai/how-to-build-your-own-ocr-a5bb91b622ba / https://www.arunponnusamy.com/preparing-custom-dataset-for-training-yolo-object-detector.html
+- CRAFT OCR (a successor of EAST): https://github.com/faustomorales/keras-ocr
